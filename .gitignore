@@ -1,0 +1,161 @@
+# C
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+*.d
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+
+# ---> C++
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.elf
+
+# Quartus
+**/incremental_db/*
+**/db/*
+**/greybox_tmp/*
+**/output_files/*
+**/obj/*
+**/stamp/*
+**/.qsys_edit
+*.sopcinfo
+*.qws
+*.map
+**/bsp/*
+*.bak
+**/mem_init/*
+*.objdump
+
+# image and video files
+*.png
+*.bmp
+*.tiff
+*.mp4
+*.avi
+*.mkv
+*.jpg
+*.jpeg
+*.pgm
+
+# IDE
+**/.vscode/*
+
+
+# Simulation
+*.hex
+*args.txt
+*.vcd
+*transcript
+*.wlf
+**/work/*
+*.ini
+
+# Signal taps
+*.stp
+design.qsys
+design/design.bsf
+design/design.cmp
+design/design.html
+design/design.vhd
+design/design.xml
+design/design_bb.v
+design/design_generation.rpt
+design/design_inst.v
+design/synthesis/design.debuginfo
+design/synthesis/design.qip
+design/synthesis/design.regmap
+design/synthesis/design.vhd
+design/synthesis/design_rst_controller.vhd
+design/synthesis/design_rst_controller_001.vhd
+design/synthesis/submodules/altera_avalon_sc_fifo.v
+design/synthesis/submodules/altera_merlin_arbitrator.sv
+design/synthesis/submodules/altera_merlin_burst_uncompressor.sv
+design/synthesis/submodules/altera_merlin_master_agent.sv
+design/synthesis/submodules/altera_merlin_master_translator.sv
+design/synthesis/submodules/altera_merlin_slave_agent.sv
+design/synthesis/submodules/altera_merlin_slave_translator.sv
+design/synthesis/submodules/altera_reset_controller.sdc
+design/synthesis/submodules/altera_reset_controller.v
+design/synthesis/submodules/altera_reset_synchronizer.v
+design/synthesis/submodules/design_irq_mapper.sv
+design/synthesis/submodules/design_jtag_uart_0.v
+design/synthesis/submodules/design_mm_interconnect_0.v
+design/synthesis/submodules/design_mm_interconnect_0_avalon_st_adapter.v
+design/synthesis/submodules/design_mm_interconnect_0_avalon_st_adapter_error_adapter_0.sv
+design/synthesis/submodules/design_mm_interconnect_0_cmd_demux.sv
+design/synthesis/submodules/design_mm_interconnect_0_cmd_demux_001.sv
+design/synthesis/submodules/design_mm_interconnect_0_cmd_mux.sv
+design/synthesis/submodules/design_mm_interconnect_0_cmd_mux_001.sv
+design/synthesis/submodules/design_mm_interconnect_0_router.sv
+design/synthesis/submodules/design_mm_interconnect_0_router_001.sv
+design/synthesis/submodules/design_mm_interconnect_0_router_002.sv
+design/synthesis/submodules/design_mm_interconnect_0_router_003.sv
+design/synthesis/submodules/design_mm_interconnect_0_rsp_demux.sv
+design/synthesis/submodules/design_mm_interconnect_0_rsp_mux.sv
+design/synthesis/submodules/design_mm_interconnect_0_rsp_mux_001.sv
+design/synthesis/submodules/design_nios2_gen2_0.v
+design/synthesis/submodules/design_nios2_gen2_0_cpu.sdc
+design/synthesis/submodules/design_nios2_gen2_0_cpu.v
+design/synthesis/submodules/design_nios2_gen2_0_cpu_debug_slave_sysclk.v
+design/synthesis/submodules/design_nios2_gen2_0_cpu_debug_slave_tck.v
+design/synthesis/submodules/design_nios2_gen2_0_cpu_debug_slave_wrapper.v
+design/synthesis/submodules/design_nios2_gen2_0_cpu_ociram_default_contents.mif
+design/synthesis/submodules/design_nios2_gen2_0_cpu_rf_ram_a.mif
+design/synthesis/submodules/design_nios2_gen2_0_cpu_rf_ram_b.mif
+design/synthesis/submodules/design_nios2_gen2_0_cpu_test_bench.v
+design/synthesis/submodules/design_onchip_memory2_0.v
+design/synthesis/submodules/design_pio_0.v
