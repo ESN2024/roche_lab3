@@ -37,13 +37,12 @@
 
 
 set_global_assignment -name FAMILY "MAX 10"
-set_global_assignment -name DEVICE 10M50DAF484C6GES
+set_global_assignment -name DEVICE 10M50DAF484C7G
 set_global_assignment -name TOP_LEVEL_ENTITY lab3_top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "08:09:49  JANUARY 16, 2024"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
-set_global_assignment -name BOARD "MAX 10 DE10 - Lite"
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
@@ -56,4 +55,12 @@ set_global_assignment -name QSYS_FILE lab3.qsys
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_AB15 -to opencores_i2c_0_export_0_scl_pad_io
+set_location_assignment PIN_V11 -to opencores_i2c_0_export_0_sda_pad_io
+set_location_assignment PIN_G2 -to altera_reserved_tck
+set_location_assignment PIN_L4 -to altera_reserved_tdi
+set_location_assignment PIN_M5 -to altera_reserved_tdo
+set_location_assignment PIN_H2 -to altera_reserved_tms
+set_location_assignment PIN_P11 -to clk_clk
+set_location_assignment PIN_B8 -to reset_reset_n
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
