@@ -159,3 +159,4 @@ design/synthesis/submodules/design_nios2_gen2_0_cpu_rf_ram_b.mif
 design/synthesis/submodules/design_nios2_gen2_0_cpu_test_bench.v
 design/synthesis/submodules/design_onchip_memory2_0.v
 design/synthesis/submodules/design_pio_0.v
+soft/app/teest.c
