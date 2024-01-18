@@ -49,21 +49,21 @@ module lab3_mm_interconnect_0_router_001_default_decode
                DEFAULT_RD_CHANNEL = -1,
                DEFAULT_DESTID = 2 
    )
-  (output [80 - 78 : 0] default_destination_id,
-   output [5-1 : 0] default_wr_channel,
-   output [5-1 : 0] default_rd_channel,
-   output [5-1 : 0] default_src_channel
+  (output [82 - 79 : 0] default_destination_id,
+   output [10-1 : 0] default_wr_channel,
+   output [10-1 : 0] default_rd_channel,
+   output [10-1 : 0] default_src_channel
   );
 
   assign default_destination_id = 
-    DEFAULT_DESTID[80 - 78 : 0];
+    DEFAULT_DESTID[82 - 79 : 0];
 
   generate
     if (DEFAULT_CHANNEL == -1) begin : no_default_channel_assignment
       assign default_src_channel = '0;
     end
     else begin : default_channel_assignment
-      assign default_src_channel = 5'b1 << DEFAULT_CHANNEL;
+      assign default_src_channel = 10'b1 << DEFAULT_CHANNEL;
     end
   endgenerate
 
@@ -73,8 +73,8 @@ module lab3_mm_interconnect_0_router_001_default_decode
       assign default_rd_channel = '0;
     end
     else begin : default_rw_channel_assignment
-      assign default_wr_channel = 5'b1 << DEFAULT_WR_CHANNEL;
-      assign default_rd_channel = 5'b1 << DEFAULT_RD_CHANNEL;
+      assign default_wr_channel = 10'b1 << DEFAULT_WR_CHANNEL;
+      assign default_rd_channel = 10'b1 << DEFAULT_RD_CHANNEL;
     end
   endgenerate
 
@@ -93,7 +93,7 @@ module lab3_mm_interconnect_0_router_001
     // Command Sink (Input)
     // -------------------
     input                       sink_valid,
-    input  [94-1 : 0]    sink_data,
+    input  [96-1 : 0]    sink_data,
     input                       sink_startofpacket,
     input                       sink_endofpacket,
     output                      sink_ready,
@@ -102,8 +102,8 @@ module lab3_mm_interconnect_0_router_001
     // Command Source (Output)
     // -------------------
     output                          src_valid,
-    output reg [94-1    : 0] src_data,
-    output reg [5-1 : 0] src_channel,
+    output reg [96-1    : 0] src_data,
+    output reg [10-1 : 0] src_channel,
     output                          src_startofpacket,
     output                          src_endofpacket,
     input                           src_ready
@@ -114,12 +114,12 @@ module lab3_mm_interconnect_0_router_001
     // -------------------------------------------------------
     localparam PKT_ADDR_H = 53;
     localparam PKT_ADDR_L = 36;
-    localparam PKT_DEST_ID_H = 80;
-    localparam PKT_DEST_ID_L = 78;
-    localparam PKT_PROTECTION_H = 84;
-    localparam PKT_PROTECTION_L = 82;
-    localparam ST_DATA_W = 94;
-    localparam ST_CHANNEL_W = 5;
+    localparam PKT_DEST_ID_H = 82;
+    localparam PKT_DEST_ID_L = 79;
+    localparam PKT_PROTECTION_H = 86;
+    localparam PKT_PROTECTION_L = 84;
+    localparam ST_DATA_W = 96;
+    localparam ST_CHANNEL_W = 10;
     localparam DECODER_TYPE = 0;
 
     localparam PKT_TRANS_WRITE = 56;
@@ -136,13 +136,13 @@ module lab3_mm_interconnect_0_router_001
     // -------------------------------------------------------
     localparam PAD0 = log2ceil(64'h20000 - 64'h10000); 
     localparam PAD1 = log2ceil(64'h21000 - 64'h20800); 
-    localparam PAD2 = log2ceil(64'h21040 - 64'h21020); 
+    localparam PAD2 = log2ceil(64'h21060 - 64'h21040); 
     // -------------------------------------------------------
     // Work out which address bits are significant based on the
     // address range of the slaves. If the required width is too
     // large or too small, we use the address field width instead.
     // -------------------------------------------------------
-    localparam ADDR_RANGE = 64'h21040;
+    localparam ADDR_RANGE = 64'h21060;
     localparam RANGE_ADDR_WIDTH = log2ceil(ADDR_RANGE);
     localparam OPTIMIZED_ADDR_H = (RANGE_ADDR_WIDTH > PKT_ADDR_W) ||
                                   (RANGE_ADDR_WIDTH == 0) ?
@@ -166,7 +166,7 @@ module lab3_mm_interconnect_0_router_001
     assign src_startofpacket = sink_startofpacket;
     assign src_endofpacket   = sink_endofpacket;
     wire [PKT_DEST_ID_W-1:0] default_destid;
-    wire [5-1 : 0] default_src_channel;
+    wire [10-1 : 0] default_src_channel;
 
 
 
@@ -192,19 +192,19 @@ module lab3_mm_interconnect_0_router_001
 
     // ( 0x10000 .. 0x20000 )
     if ( {address[RG:PAD0],{PAD0{1'b0}}} == 18'h10000   ) begin
-            src_channel = 5'b100;
+            src_channel = 10'b100;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 2;
     end
 
     // ( 0x20800 .. 0x21000 )
     if ( {address[RG:PAD1],{PAD1{1'b0}}} == 18'h20800   ) begin
-            src_channel = 5'b010;
+            src_channel = 10'b010;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 1;
     end
 
-    // ( 0x21020 .. 0x21040 )
-    if ( {address[RG:PAD2],{PAD2{1'b0}}} == 18'h21020   ) begin
-            src_channel = 5'b001;
+    // ( 0x21040 .. 0x21060 )
+    if ( {address[RG:PAD2],{PAD2{1'b0}}} == 18'h21040   ) begin
+            src_channel = 10'b001;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 3;
     end
 
