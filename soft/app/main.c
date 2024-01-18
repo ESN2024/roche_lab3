@@ -47,7 +47,7 @@ void I2C_READ_BURSTMODE_ADXL345(__uint8_t *X0, __uint8_t *X1, __uint8_t *Y0, __u
     *Z1 = I2C_READ_ADXL345(0x37);
 }
 
-__int16_t complement_2(__int16_t number, __int16_t *negatif){
+__int16_t complement_2(__int16_t number, __uint8_t *negatif){
     if (number & 0x8000) {
         number = -(0xFFFF) - number + 1;
         *negatif = 1;
@@ -60,7 +60,7 @@ __int16_t complement_2(__int16_t number, __int16_t *negatif){
 
 int main() {
 
-    __uint8_t X0,X1,Y0,Y1,Z0,Z1,m,u,d,c;
+    __uint8_t X0,X1,Y0,Y1,Z0,Z1,m,u,d,c,negatifX;
     __int16_t X, Y, Z;
     __uint8_t OFSX, OFSY, OFSZ; 
     I2C_init(OPENCORES_I2C_0_BASE,ALT_CPU_CPU_FREQ,400000); // 
@@ -88,16 +88,16 @@ int main() {
 
         Z = (Z1 << 8) + Z0;
 
-        X = complement_2(X)*3.9; //permet d avoir un resultat en mg
-        Y = complement_2(Y)*3.9;
-        Z = complement_2(Z)*3.9;
+        X = complement_2(X,&negatifX)*3.9; //permet d avoir un resultat en mg
+        // Y = complement_2(Y,&negatifY)*3.9;
+        // Z = complement_2(Z,&negatifZ)*3.9;
 
             m = X / 1000;           
             c = (X / 100) % 10;     
             d = (X / 10) % 10;      
             u = X % 10;             
 
-            if (negatif) {
+            if (negatifX) {
                 IOWR_ALTERA_AVALON_PIO_DATA(PIO_4_BASE, 0b1111); //mets le signe -
             } else {
                 IOWR_ALTERA_AVALON_PIO_DATA(PIO_4_BASE, 0b1011); //affiche rien

@@ -23,7 +23,7 @@ begin
             when "0111" => seg_out <= "1111000"; -- 7
             when "1000" => seg_out <= "0000000"; -- 8
             when "1001" => seg_out <= "0010000"; -- 9
-            when "1111" => seg_out <= "1011111"; -- moins pour voir les negatifs
+            when "1111" => seg_out <= "0111111"; -- moins pour voir les negatifs
             when others => seg_out <= "1111111"; -- eteint
         end case;
     end process;
