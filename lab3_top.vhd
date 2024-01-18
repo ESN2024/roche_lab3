@@ -15,6 +15,7 @@ entity lab3_top is
 		seg1 : out std_logic_vector(6 downto 0);
 		seg2 : out std_logic_vector(6 downto 0);
 		seg3 : out std_logic_vector(6 downto 0);
+		seg4 : out std_logic_vector(6 downto 0);
 		bouton : in    std_logic;  
 		reset                   : in  std_logic                    := '0'  --                     reset.reset_n
 	);
@@ -30,6 +31,7 @@ architecture rtl of lab3_top is
 			pio_1_external_connection_export      : out   std_logic_vector(3 downto 0);        --      pio_1_external_connection.export
 			pio_2_external_connection_export      : out   std_logic_vector(3 downto 0);        --      pio_2_external_connection.export
 			pio_3_external_connection_export      : out   std_logic_vector(3 downto 0);        --      pio_3_external_connection.export
+			pio_4_external_connection_export      : out   std_logic_vector(3 downto 0);        --      pio_4_external_connection.export
 			pio_bouton_external_connection_export : in    std_logic                    := '0'; -- pio_bouton_external_connection.export
 			reset_reset_n                         : in    std_logic                    := '0'  --                          reset.reset_n
 		);
@@ -45,6 +47,7 @@ architecture rtl of lab3_top is
 	signal s1 : std_logic_vector(3 downto 0);
 	signal s2 : std_logic_vector(3 downto 0);
 	signal s3 : std_logic_vector(3 downto 0);
+	signal s4 : std_logic_vector(3 downto 0);
 begin
 		u0 : component lab3
 			port map (
@@ -55,6 +58,7 @@ begin
 				pio_1_external_connection_export      => s1,      --      pio_1_external_connection.export
 				pio_2_external_connection_export      => s2,      --      pio_2_external_connection.export
 				pio_3_external_connection_export      => s3,      --      pio_3_external_connection.export
+				pio_4_external_connection_export      => s4,
 				reset_reset_n                         => reset,                         --                          reset.reset_n
 				pio_bouton_external_connection_export => bouton  -- pio_bouton_external_connection.export
 			);
@@ -78,5 +82,10 @@ begin
 			port map (
 				bin_in                     => s3,  
 				seg_out                    => seg3
+			);
+		u5 : component bin_to_7seg
+			port map (
+				bin_in                     => s4,  
+				seg_out                    => seg4
 			);
 end architecture rtl;

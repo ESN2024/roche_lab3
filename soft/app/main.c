@@ -1,6 +1,12 @@
-#include <unistd.h>
+#include <stdio.h>
 #include "system.h"
+#include <sys/alt_irq.h>
+#include <io.h>
+#include <alt_types.h>
+#include "sys/alt_sys_init.h"
 #include "altera_avalon_pio_regs.h"
+#include "altera_avalon_timer_regs.h"
+#include "altera_avalon_timer.h"
 #include "opencores_i2c.h"
 #include <stdint.h>
 
@@ -41,9 +47,12 @@ void I2C_READ_BURSTMODE_ADXL345(__uint8_t *X0, __uint8_t *X1, __uint8_t *Y0, __u
     *Z1 = I2C_READ_ADXL345(0x37);
 }
 
-__int16_t complement_2(__int16_t number){
+__int16_t complement_2(__int16_t number, __int16_t *negatif){
     if (number & 0x8000) {
         number = -(0xFFFF) - number + 1;
+        *negatif = 1;
+    } else {
+        *negatif = 0; //controle le signe
     }
     return number;
 }
@@ -51,7 +60,7 @@ __int16_t complement_2(__int16_t number){
 
 int main() {
 
-    __uint8_t X0,X1,Y0,Y1,Z0,Z1 ; 
+    __uint8_t X0,X1,Y0,Y1,Z0,Z1,m,u,d,c;
     __int16_t X, Y, Z;
     __uint8_t OFSX, OFSY, OFSZ; 
     I2C_init(OPENCORES_I2C_0_BASE,ALT_CPU_CPU_FREQ,400000); // 
@@ -82,6 +91,25 @@ int main() {
         X = complement_2(X)*3.9; //permet d avoir un resultat en mg
         Y = complement_2(Y)*3.9;
         Z = complement_2(Z)*3.9;
+
+            m = X / 1000;           
+            c = (X / 100) % 10;     
+            d = (X / 10) % 10;      
+            u = X % 10;             
+
+            if (negatif) {
+                IOWR_ALTERA_AVALON_PIO_DATA(PIO_4_BASE, 0b1111); //mets le signe -
+            } else {
+                IOWR_ALTERA_AVALON_PIO_DATA(PIO_4_BASE, 0b1011); //affiche rien
+            }
+
+            IOWR_ALTERA_AVALON_PIO_DATA(PIO_0_BASE, u); 
+
+            IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, d);
+
+            IOWR_ALTERA_AVALON_PIO_DATA(PIO_2_BASE, c);
+
+            IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, m);
 
         // alt_printf("X : %x.%x Y : %x.%x Z : %x.%x\n", X1,X0,Y1,Y0,Z1,Z0);
         // alt_printf("X : %x\n", OFSZ);

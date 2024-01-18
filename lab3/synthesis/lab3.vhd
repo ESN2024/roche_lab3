@@ -15,6 +15,7 @@ entity lab3 is
 		pio_1_external_connection_export      : out   std_logic_vector(3 downto 0);        --      pio_1_external_connection.export
 		pio_2_external_connection_export      : out   std_logic_vector(3 downto 0);        --      pio_2_external_connection.export
 		pio_3_external_connection_export      : out   std_logic_vector(3 downto 0);        --      pio_3_external_connection.export
+		pio_4_external_connection_export      : out   std_logic_vector(3 downto 0);        --      pio_4_external_connection.export
 		pio_bouton_external_connection_export : in    std_logic                    := '0'; -- pio_bouton_external_connection.export
 		reset_reset_n                         : in    std_logic                    := '0'  --                          reset.reset_n
 	);
@@ -200,6 +201,11 @@ architecture rtl of lab3 is
 			pio_3_s1_readdata                                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			pio_3_s1_writedata                                      : out std_logic_vector(31 downto 0);                    -- writedata
 			pio_3_s1_chipselect                                     : out std_logic;                                        -- chipselect
+			pio_4_s1_address                                        : out std_logic_vector(1 downto 0);                     -- address
+			pio_4_s1_write                                          : out std_logic;                                        -- write
+			pio_4_s1_readdata                                       : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			pio_4_s1_writedata                                      : out std_logic_vector(31 downto 0);                    -- writedata
+			pio_4_s1_chipselect                                     : out std_logic;                                        -- chipselect
 			pio_bouton_s1_address                                   : out std_logic_vector(1 downto 0);                     -- address
 			pio_bouton_s1_readdata                                  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			timer_0_s1_address                                      : out std_logic_vector(2 downto 0);                     -- address
@@ -420,6 +426,11 @@ architecture rtl of lab3 is
 	signal mm_interconnect_0_timer_0_s1_address                            : std_logic_vector(2 downto 0);  -- mm_interconnect_0:timer_0_s1_address -> timer_0:address
 	signal mm_interconnect_0_timer_0_s1_write                              : std_logic;                     -- mm_interconnect_0:timer_0_s1_write -> mm_interconnect_0_timer_0_s1_write:in
 	signal mm_interconnect_0_timer_0_s1_writedata                          : std_logic_vector(15 downto 0); -- mm_interconnect_0:timer_0_s1_writedata -> timer_0:writedata
+	signal mm_interconnect_0_pio_4_s1_chipselect                           : std_logic;                     -- mm_interconnect_0:pio_4_s1_chipselect -> pio_4:chipselect
+	signal mm_interconnect_0_pio_4_s1_readdata                             : std_logic_vector(31 downto 0); -- pio_4:readdata -> mm_interconnect_0:pio_4_s1_readdata
+	signal mm_interconnect_0_pio_4_s1_address                              : std_logic_vector(1 downto 0);  -- mm_interconnect_0:pio_4_s1_address -> pio_4:address
+	signal mm_interconnect_0_pio_4_s1_write                                : std_logic;                     -- mm_interconnect_0:pio_4_s1_write -> mm_interconnect_0_pio_4_s1_write:in
+	signal mm_interconnect_0_pio_4_s1_writedata                            : std_logic_vector(31 downto 0); -- mm_interconnect_0:pio_4_s1_writedata -> pio_4:writedata
 	signal irq_mapper_receiver0_irq                                        : std_logic;                     -- opencores_i2c_0:wb_inta_o -> irq_mapper:receiver0_irq
 	signal irq_mapper_receiver1_irq                                        : std_logic;                     -- jtag_uart_0:av_irq -> irq_mapper:receiver1_irq
 	signal irq_mapper_receiver2_irq                                        : std_logic;                     -- timer_0:irq -> irq_mapper:receiver2_irq
@@ -437,8 +448,9 @@ architecture rtl of lab3 is
 	signal mm_interconnect_0_pio_2_s1_write_ports_inv                      : std_logic;                     -- mm_interconnect_0_pio_2_s1_write:inv -> pio_2:write_n
 	signal mm_interconnect_0_pio_3_s1_write_ports_inv                      : std_logic;                     -- mm_interconnect_0_pio_3_s1_write:inv -> pio_3:write_n
 	signal mm_interconnect_0_timer_0_s1_write_ports_inv                    : std_logic;                     -- mm_interconnect_0_timer_0_s1_write:inv -> timer_0:write_n
+	signal mm_interconnect_0_pio_4_s1_write_ports_inv                      : std_logic;                     -- mm_interconnect_0_pio_4_s1_write:inv -> pio_4:write_n
 	signal rst_controller_reset_out_reset_ports_inv                        : std_logic;                     -- rst_controller_reset_out_reset:inv -> [jtag_uart_0:rst_n, nios2_gen2_0:reset_n]
-	signal rst_controller_001_reset_out_reset_ports_inv                    : std_logic;                     -- rst_controller_001_reset_out_reset:inv -> [pio_0:reset_n, pio_1:reset_n, pio_2:reset_n, pio_3:reset_n, pio_bouton:reset_n, timer_0:reset_n]
+	signal rst_controller_001_reset_out_reset_ports_inv                    : std_logic;                     -- rst_controller_001_reset_out_reset:inv -> [pio_0:reset_n, pio_1:reset_n, pio_2:reset_n, pio_3:reset_n, pio_4:reset_n, pio_bouton:reset_n, timer_0:reset_n]
 
 begin
 
@@ -564,6 +576,18 @@ begin
 			out_port   => pio_3_external_connection_export              -- external_connection.export
 		);
 
+	pio_4 : component lab3_pio_0
+		port map (
+			clk        => clk_clk,                                      --                 clk.clk
+			reset_n    => rst_controller_001_reset_out_reset_ports_inv, --               reset.reset_n
+			address    => mm_interconnect_0_pio_4_s1_address,           --                  s1.address
+			write_n    => mm_interconnect_0_pio_4_s1_write_ports_inv,   --                    .write_n
+			writedata  => mm_interconnect_0_pio_4_s1_writedata,         --                    .writedata
+			chipselect => mm_interconnect_0_pio_4_s1_chipselect,        --                    .chipselect
+			readdata   => mm_interconnect_0_pio_4_s1_readdata,          --                    .readdata
+			out_port   => pio_4_external_connection_export              -- external_connection.export
+		);
+
 	pio_bouton : component lab3_pio_bouton
 		port map (
 			clk      => clk_clk,                                      --                 clk.clk
@@ -650,6 +674,11 @@ begin
 			pio_3_s1_readdata                                       => mm_interconnect_0_pio_3_s1_readdata,                         --                                                  .readdata
 			pio_3_s1_writedata                                      => mm_interconnect_0_pio_3_s1_writedata,                        --                                                  .writedata
 			pio_3_s1_chipselect                                     => mm_interconnect_0_pio_3_s1_chipselect,                       --                                                  .chipselect
+			pio_4_s1_address                                        => mm_interconnect_0_pio_4_s1_address,                          --                                          pio_4_s1.address
+			pio_4_s1_write                                          => mm_interconnect_0_pio_4_s1_write,                            --                                                  .write
+			pio_4_s1_readdata                                       => mm_interconnect_0_pio_4_s1_readdata,                         --                                                  .readdata
+			pio_4_s1_writedata                                      => mm_interconnect_0_pio_4_s1_writedata,                        --                                                  .writedata
+			pio_4_s1_chipselect                                     => mm_interconnect_0_pio_4_s1_chipselect,                       --                                                  .chipselect
 			pio_bouton_s1_address                                   => mm_interconnect_0_pio_bouton_s1_address,                     --                                     pio_bouton_s1.address
 			pio_bouton_s1_readdata                                  => mm_interconnect_0_pio_bouton_s1_readdata,                    --                                                  .readdata
 			timer_0_s1_address                                      => mm_interconnect_0_timer_0_s1_address,                        --                                        timer_0_s1.address
@@ -816,6 +845,8 @@ begin
 	mm_interconnect_0_pio_3_s1_write_ports_inv <= not mm_interconnect_0_pio_3_s1_write;
 
 	mm_interconnect_0_timer_0_s1_write_ports_inv <= not mm_interconnect_0_timer_0_s1_write;
+
+	mm_interconnect_0_pio_4_s1_write_ports_inv <= not mm_interconnect_0_pio_4_s1_write;
 
 	rst_controller_reset_out_reset_ports_inv <= not rst_controller_reset_out_reset;
 
