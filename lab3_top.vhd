@@ -16,7 +16,7 @@ entity lab3_top is
 		seg2 : out std_logic_vector(6 downto 0);
 		seg3 : out std_logic_vector(6 downto 0);
 		seg4 : out std_logic_vector(6 downto 0);
-		bouton : in    std_logic;  
+		bouton : in    std_logic :='0';  
 		reset                   : in  std_logic                    := '0'  --                     reset.reset_n
 	);
 end entity lab3_top;

@@ -179,11 +179,6 @@ module lab3_mm_interconnect_0_router
 
 
 
-    // -------------------------------------------------------
-    // Write and read transaction signals
-    // -------------------------------------------------------
-    wire read_transaction;
-    assign read_transaction  = sink_data[PKT_TRANS_READ];
 
 
     lab3_mm_interconnect_0_router_default_decode the_default_decode(
@@ -234,7 +229,7 @@ module lab3_mm_interconnect_0_router
     end
 
     // ( 0x21070 .. 0x21080 )
-    if ( {address[RG:PAD5],{PAD5{1'b0}}} == 18'h21070  && read_transaction  ) begin
+    if ( {address[RG:PAD5],{PAD5{1'b0}}} == 18'h21070   ) begin
             src_channel = 11'b00100000000;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 9;
     end

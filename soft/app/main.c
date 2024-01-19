@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 volatile __int16_t X, Y, Z;
-volatile __uint8_t X0,X1,Y0,Y1,Z0,Z1,m,u,d,c,negatif;
+volatile __uint8_t X0,X1,Y0,Y1,Z0,Z1,m,u,d,c,negatif,bouton;
 
 __uint8_t I2C_READ_ADXL345(__uint8_t reg) {
 
@@ -102,12 +102,19 @@ static void irqhandler_timer(void* context, alt_u32 id)
     IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x1); //clear le flag d'interruption
 }
 
+static void irqhandler_bouton_key1(void* context, alt_u32 id)
+{
+    // Réinitialiser le registre de capture de bord pour effacer l'interruption
+    IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_BOUTON_BASE, 0x1);
 
+    bouton++;
+    alt_printf("btn : %x", bouton);
+    // Action de réponse à l'interruption
+
+}
 
 int main() {
-
-    
-    
+    bouton=0;
     // __uint8_t OFSX, OFSY, OFSZ; 
     I2C_init(OPENCORES_I2C_0_BASE,ALT_CPU_CPU_FREQ,400000); // 
 
@@ -124,6 +131,10 @@ int main() {
     // alt_printf("OFS : %x   %x   %x\n", OFSX, OFSY, OFSZ);
 
     alt_irq_register(TIMER_0_IRQ, NULL, irqhandler_timer);
+    // Enregistrer l'interruption
+    IOWR_ALTERA_AVALON_PIO_IRQ_MASK(PIO_BOUTON_BASE, 0x1);
+    IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_BOUTON_BASE, 0x1);
+    alt_irq_register(PIO_BOUTON_IRQ, NULL, irqhandler_bouton_key1);
     while(1) {}
     return 0;
 }
