@@ -95,9 +95,48 @@ static void irqhandler_timer(void* context, alt_u32 id)
     Y = (Y1 << 8) + Y0;
 
     Z = (Z1 << 8) + Z0;
+    alt_printf("btn : %x", bouton);
+    // switch(bouton){
+    //     case 0:
+    //         X = complement_2(X,&negatif)*3.9; //permet d avoir un resultat en mg
+    //         display_segment(X, &negatif);
+    //         break;
+    //     case 1:
+    //         X = complement_2(X,&negatif)*3.9; //permet d avoir un resultat en mg
+    //         display_segment(X, &negatif);
+    //         break;
+    //     case 2:
+    //         Y = complement_2(Y,&negatif)*3.9; //permet d avoir un resultat en mg
+    //         display_segment(Y, &negatif);
+    //         break;
+    //     case 3:
+    //         Y = complement_2(Y,&negatif)*3.9; //permet d avoir un resultat en mg
+    //         display_segment(Y, &negatif);
+    //         break;
+    //     case 4:
+    //         Z = complement_2(Z,&negatif)*3.9; //permet d avoir un resultat en mg
+    //         display_segment(Z, &negatif);
+    //         break;
+    //     case 5:
+    //         Z = complement_2(Z,&negatif)*3.9; //permet d avoir un resultat en mg
+    //         display_segment(Z, &negatif);
+    //         break;
+    // }
 
-    X = complement_2(X,&negatif)*3.9; //permet d avoir un resultat en mg
-    display_segment(X, &negatif);
+    if (bouton==0){
+        X = complement_2(X,&negatif)*3.9; //permet d avoir un resultat en mg
+        display_segment(X, &negatif);
+    } 
+
+    if (bouton==1){
+        Y = complement_2(Y,&negatif)*3.9; //permet d avoir un resultat en mg
+        display_segment(Y, &negatif);
+    } 
+
+    if (bouton==2){
+        Z = complement_2(Z,&negatif)*3.9; //permet d avoir un resultat en mg
+        display_segment(Z, &negatif);
+    } 
 
     IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE, 0x1); //clear le flag d'interruption
 }
@@ -107,8 +146,12 @@ static void irqhandler_bouton_key1(void* context, alt_u32 id)
     // Réinitialiser le registre de capture de bord pour effacer l'interruption
     IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_BOUTON_BASE, 0x1);
 
-    bouton++;
-    alt_printf("btn : %x", bouton);
+    if(bouton>2){
+        bouton=0;
+    } else {
+        bouton++;
+    }
+    
     // Action de réponse à l'interruption
 
 }
