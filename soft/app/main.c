@@ -57,10 +57,33 @@ __int16_t complement_2(__int16_t number, __uint8_t *negatif){
     return number;
 }
 
+void display_segment(__int16_t X, __uint8_t *negatif) {
+
+    __uint8_t m,u,d,c;
+
+    m = X / 1000;           
+    c = (X / 100) % 10;     
+    d = (X / 10) % 10;      
+    u = X % 10;             
+
+    if (*negatif) {
+        IOWR_ALTERA_AVALON_PIO_DATA(PIO_4_BASE, 0b1111); //mets le signe -
+    } else {
+        IOWR_ALTERA_AVALON_PIO_DATA(PIO_4_BASE, 0b1011); //affiche rien
+    }
+
+    IOWR_ALTERA_AVALON_PIO_DATA(PIO_0_BASE, u); 
+
+    IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, d);
+
+    IOWR_ALTERA_AVALON_PIO_DATA(PIO_2_BASE, c);
+
+    IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, m);
+}
 
 int main() {
 
-    __uint8_t X0,X1,Y0,Y1,Z0,Z1,m,u,d,c,negatifX;
+    __uint8_t X0,X1,Y0,Y1,Z0,Z1,m,u,d,c,negatif;
     __int16_t X, Y, Z;
     __uint8_t OFSX, OFSY, OFSZ; 
     I2C_init(OPENCORES_I2C_0_BASE,ALT_CPU_CPU_FREQ,400000); // 
@@ -88,28 +111,11 @@ int main() {
 
         Z = (Z1 << 8) + Z0;
 
-        X = complement_2(X,&negatifX)*3.9; //permet d avoir un resultat en mg
+        X = complement_2(X,&negatif)*3.9; //permet d avoir un resultat en mg
         // Y = complement_2(Y,&negatifY)*3.9;
         // Z = complement_2(Z,&negatifZ)*3.9;
 
-            m = X / 1000;           
-            c = (X / 100) % 10;     
-            d = (X / 10) % 10;      
-            u = X % 10;             
-
-            if (negatifX) {
-                IOWR_ALTERA_AVALON_PIO_DATA(PIO_4_BASE, 0b1111); //mets le signe -
-            } else {
-                IOWR_ALTERA_AVALON_PIO_DATA(PIO_4_BASE, 0b1011); //affiche rien
-            }
-
-            IOWR_ALTERA_AVALON_PIO_DATA(PIO_0_BASE, u); 
-
-            IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, d);
-
-            IOWR_ALTERA_AVALON_PIO_DATA(PIO_2_BASE, c);
-
-            IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, m);
+        display_segment(X, &negatif);
 
         // alt_printf("X : %x.%x Y : %x.%x Z : %x.%x\n", X1,X0,Y1,Y0,Z1,Z0);
         // alt_printf("X : %x\n", OFSZ);
