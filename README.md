@@ -58,9 +58,15 @@ Ensuite, la routine affiche les valeurs sur les 7 segments suivant la valeur du 
 
 4. `complement_2()` : Fonction qui analyse si la valeur d'entré est un entier négatif, et calcul son complément à 2. De plus, cette fonction mets à jour le pointeur "negatif" à 1 si le nombre est négatif.
 5. `display_segment()` : Fonction qui affiche la valeur du gyroscope sur la carte avec les 5 digits 7 segments. 4 digits sont utilisés pour afficher le nombre (une conversion BCD sur 4 chiffres est réalisé), et un digit est utilisé pour afficher le signe "-" dans le cas d'une valeur négative, sinon ce dernier est éteint.
-6. `main()` : Utiliser pour enregistrer les 2 routines d'interruptions (celle du timer et du bouton) 
+6. `main()` : Utiliser pour enregistrer les 2 routines d'interruptions (celle du timer et du bouton). Ensuite, une boucle infinie vide fait tourner le programme principal à l'attente des flags d'interruptions.
 
 ## Calibration
+J'ai essayé de calculer les offset avec les formules de la documentation, dans un premier temps j'ai mis les offset à 0 sur les 3 axes (avec la fonction `ADXL345_SET_OFFSET_0()`) puis j'ai relevé la valeurs des axes sur le plan Z. En résultat je dois avoir (x,y,z) => (0,0,1000) en mg. Cependant, ma sortie n'est pas en mg ! Il faut rajouter un facteur de 3,9 sur les registres de sortie de l'acceleromètre pour avoir des résultats en mg (voir documentation). Finalement, les calculs des offset avec la formule de la documentation n'était pas très efficace. Cela m'a permis de me rapprocher de la valeurs parfaite mais j'ai du finir par dichotomie en effectuant des tests pour avoir un résultat au plus proche des valeurs souhaité. 
+\\
+J'ai ainsi comme valeurs en offset :
+-OFSX = 0
+-OFSY = 5
+-OFSZ = -51
 
 ## Résultat
 Verification du fonctionnement du compteur sans timer (on vérifie ici si le compteur va jusqu'à 999 et revient à 0)
