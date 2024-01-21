@@ -1,5 +1,5 @@
 
-# ESN11 - Lab3
+# ESN12 - Lab3
 
 ## Introduction
 L'objectif de ce projet était d'implémenter un système d'affichage de données issue du gyroscope de la carte DE-10. L'affichage des données s'actualise toute les secondes sur les 7 segments des digits grâce à un timer. Pour choisir l'axe à afficher, il suffit de cliquer sur un bouton. 
@@ -18,7 +18,14 @@ Ce système est implémenter avec un soft-core NIOS II et l'interface avec le gy
 
 
 - Après la création d'un nouveau projet sur Quartus, ouvrir le Platform Designer pour ajouter tous les éléments nécessaires au projet :
+
+- **Eléments basique du système :**
+- **Processeur Nios II**
+- **Clock**
+- **JTAG** : Permet de debugger
 - **Mémoire** : RAM avec un stockage de 40 Mo.
+
+- **Eléments propre au sujet :**
 Nous avons besoin d'un compteur à 4 chiffre, alors :
 - **PIO_0** : Correspond à la sortie Qsys du 1er compteur 4 bits.
 - **PIO_1** : Correspond à la sortie Qsys du 2eme compteur 4 bits.
