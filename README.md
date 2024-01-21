@@ -47,11 +47,15 @@ Le système se décompose en 3 partis :
 - Générer le Makefile du projet.
 
 ## Langage C (main.c)
-Le code C se divise en deux parties :
-1. `irqhandler_timer()` : Routine d’interruption du timer, le flag d’interruption est remis à 0 à chaque fois qu'une routine est lancé. Cette routine génère en fonction d'un compteur 16 bits (i) une conversion binaire vers BCD. Cette conversion sépare en 3 variable de 8 bits le compteurs i. Sous forme d'unité, dizaine et centaine.
-Cette routine est lancé à chaque interruption soit toutes les secondes.
+Le code C se divise en plusieurs parties :
+1. `irqhandler_bouton_key1()` : Routine d’interruption du bouton key1, le flag d’interruption est remis à 0 à chaque fois qu'une routine est lancé. Cette routine incrémente la variable bouton lorsque qu'on appuie sur le bouton. Elle est sensible uniquement au front descendant, cela permet d'incrémenter de 1 pour un appuie et relachement du bouton (front montant et descendant). Lorsque bouton est supérieur à 2, il est remis à 0. Cela permet d'afficher les 3 axes (X,Y,Z) sachant que pour bouton : 0=X, 1=Y, 2=Z.
 
-2. `main()` : Programme principal conçu pour enregistrer l'interruptions du timer. De plus, il initialise le compteur à 0. Ensuite, le programme boucle à l'infinie.
+2. `irqhandler_timer()` : Routine d’interruption du timer, le flag d’interruption est remis à 0 à chaque fois qu'une routine est lancé. Cette routine est lancé toutes les secondes et rassemble plusieurs fonctions. En effet, elle communique avec le gyroscope pour lire les données des registres des valeurs de sortie (J'ai réécrit les fonctions read et write en I2C pour lire et écrire directement dans les registre du gyroscope. Les valeurs des registre sont sur 8 bits, pour un axe données les valeurs sont à reconstruire avec X0 octets de poids faible et X1 octets de poids fort. Il faut alors reconstruire les valeurs en effectuant un décalage à droite et une addition pour obtenir les valeurs X, Y et Z sur 16 bits signé.\
+Ensuite, la routine affiche les valeurs sur les 7 segments suivant la valeur du bouton (pour afficher l'axe souhaité). Cependant, avant d'afficher avec la fonction `display_segment()`, il faut vérifier si la valeurs est signé négativement et dans ce cas calculé le complément à 2 de cette valeur avec `complement_2()`.
+3. 
+4. 
+
+## Calibration
 
 ## Résultat
 Verification du fonctionnement du compteur sans timer (on vérifie ici si le compteur va jusqu'à 999 et revient à 0)
@@ -63,7 +67,6 @@ Validation de fonctionnement du système
 https://github.com/ESN2024/roche_lab2/assets/116710033/e39876a7-0a60-43ff-96be-42ec67c33ff5
 
 Le système fonctionne correctement.
-
 
 ## Conclusion
 
