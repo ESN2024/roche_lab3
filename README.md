@@ -48,12 +48,17 @@ Le système se décompose en 3 partis :
 
 ## Langage C (main.c)
 Le code C se divise en plusieurs parties :
-1. `irqhandler_bouton_key1()` : Routine d’interruption du bouton key1, le flag d’interruption est remis à 0 à chaque fois qu'une routine est lancé. Cette routine incrémente la variable bouton lorsque qu'on appuie sur le bouton. Elle est sensible uniquement au front descendant, cela permet d'incrémenter de 1 pour un appuie et relachement du bouton (front montant et descendant). Lorsque bouton est supérieur à 2, il est remis à 0. Cela permet d'afficher les 3 axes (X,Y,Z) sachant que pour bouton : 0=X, 1=Y, 2=Z.
+1. `irqhandler_bouton_key1()` : Routine d’interruption du bouton key1, le flag d’interruption est remis à 0 à chaque fois qu'une routine est lancé. Cette routine incrémente la variable bouton lorsque qu'on appuie sur le bouton. Elle est sensible uniquement au front descendant, cela permet d'incrémenter de 1 pour un appuie et relachement du bouton (front montant et descendant). Lorsque bouton est supérieur à 2, il est remis à 0. Cela permet d'afficher les 3 axes (X,Y,Z) sachant que pour bouton : 0=X, 1=Y, 2=Z. De plus, cette routine affiche dans le terminal la valeur du bouton pour que l'utilisateur puisse savoir l'axe affiché.
+\
+![image](https://github.com/ESN2024/roche_lab3/assets/116710033/907828dd-f3dc-4bef-bcfd-38bb1c80dde8)
 
-2. `irqhandler_timer()` : Routine d’interruption du timer, le flag d’interruption est remis à 0 à chaque fois qu'une routine est lancé. Cette routine est lancé toutes les secondes et rassemble plusieurs fonctions. En effet, elle communique avec le gyroscope pour lire les données des registres des valeurs de sortie (J'ai réécrit les fonctions read et write en I2C pour lire et écrire directement dans les registre du gyroscope. Les valeurs des registre sont sur 8 bits, pour un axe données les valeurs sont à reconstruire avec X0 octets de poids faible et X1 octets de poids fort. Il faut alors reconstruire les valeurs en effectuant un décalage à droite et une addition pour obtenir les valeurs X, Y et Z sur 16 bits signé.\
+
+3. `irqhandler_timer()` : Routine d’interruption du timer, le flag d’interruption est remis à 0 à chaque fois qu'une routine est lancé. Cette routine est lancé toutes les secondes et rassemble plusieurs fonctions. En effet, elle communique avec le gyroscope pour lire les données des registres des valeurs de sortie (J'ai réécrit les fonctions read et write en I2C pour lire et écrire directement dans les registre du gyroscope. Les valeurs des registre sont sur 8 bits, pour un axe données les valeurs sont à reconstruire avec X0 octets de poids faible et X1 octets de poids fort. Il faut alors reconstruire les valeurs en effectuant un décalage à droite et une addition pour obtenir les valeurs X, Y et Z sur 16 bits signé.\
 Ensuite, la routine affiche les valeurs sur les 7 segments suivant la valeur du bouton (pour afficher l'axe souhaité). Cependant, avant d'afficher avec la fonction `display_segment()`, il faut vérifier si la valeurs est signé négativement et dans ce cas calculé le complément à 2 de cette valeur avec `complement_2()`.
-3. 
-4. 
+
+4. `complement_2()` : Fonction qui analyse si la valeur d'entré est un entier négatif, et calcul son complément à 2. De plus, cette fonction mets à jour le pointeur "negatif" à 1 si le nombre est négatif.
+5. `display_segment()` : Fonction qui affiche la valeur du gyroscope sur la carte avec les 5 digits 7 segments. 4 digits sont utilisés pour afficher le nombre (une conversion BCD sur 4 chiffres est réalisé), et un digit est utilisé pour afficher le signe "-" dans le cas d'une valeur négative, sinon ce dernier est éteint.
+6. `main()` : Utiliser pour enregistrer les 2 routines d'interruptions (celle du timer et du bouton) 
 
 ## Calibration
 
