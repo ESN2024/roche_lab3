@@ -58,7 +58,7 @@ Ensuite, la routine affiche les valeurs sur les 7 segments suivant la valeur du 
 
 4. `complement_2()` : Fonction qui analyse si la valeur d'entré est un entier négatif, et calcul son complément à 2. De plus, cette fonction mets à jour le pointeur "negatif" à 1 si le nombre est négatif.
 5. `display_segment()` : Fonction qui affiche la valeur du gyroscope sur la carte avec les 5 digits 7 segments. 4 digits sont utilisés pour afficher le nombre (une conversion BCD sur 4 chiffres est réalisé), et un digit est utilisé pour afficher le signe "-" dans le cas d'une valeur négative, sinon ce dernier est éteint.
-6. `main()` : Utiliser pour enregistrer les 2 routines d'interruptions (celle du timer et du bouton). Ensuite, une boucle infinie vide fait tourner le programme principal à l'attente des flags d'interruptions.
+6. `main()` : Utiliser pour enregistrer les 2 routines d'interruptions (celle du timer et du bouton), on l'utilise aussi pour mettre les valeurs de sortie en mode fullrange en mettant le registre 0x31 à 8. Ensuite, une boucle infinie vide fait tourner le programme principal à l'attente des flags d'interruptions.
 
 ## Calibration
 J'ai essayé de calculer les offset avec les formules de la documentation, dans un premier temps j'ai mis les offset à 0 sur les 3 axes (avec la fonction `ADXL345_SET_OFFSET_0()`) puis j'ai relevé la valeurs des axes sur le plan Z. En résultat je dois avoir (x,y,z) => (0,0,1000) en mg. Cependant, ma sortie n'est pas en mg ! Il faut rajouter un facteur de 3,9 sur les registres de sortie de l'acceleromètre pour avoir des résultats en mg (voir documentation). Finalement, les calculs des offset avec la formule de la documentation n'était pas très efficace. Cela m'a permis de me rapprocher de la valeurs parfaite mais j'ai du finir par dichotomie en effectuant des tests pour avoir un résultat au plus proche des valeurs souhaité. 
@@ -66,18 +66,22 @@ J'ai essayé de calculer les offset avec les formules de la documentation, dans 
 J'ai ainsi comme valeurs en offset :
 -OFSX = 0
 -OFSY = 5
--OFSZ = -51
+-OFSZ = -760
 
 ## Résultat
-Verification du fonctionnement du compteur sans timer (on vérifie ici si le compteur va jusqu'à 999 et revient à 0)
 
-https://github.com/ESN2024/roche_lab2/assets/116710033/93f47ef4-0973-429a-8db5-6de4d433b587
+J'ai eu du mal à comprendre le fonctionnement des valeurs entre entier signé et non-signé et comprendre la reconstruction des valeurs en full range avec le coeficient de 3,9. 
+Verification du fonctionnement du système sur le plan X :
 
-Validation de fonctionnement du système
+https://github.com/ESN2024/roche_lab3/assets/116710033/219fbe07-bbe2-41ad-b579-e6aee1bfeb61
 
-https://github.com/ESN2024/roche_lab2/assets/116710033/e39876a7-0a60-43ff-96be-42ec67c33ff5
+Verification du fonctionnement du système sur le plan Y :
 
-Le système fonctionne correctement.
+https://github.com/ESN2024/roche_lab3/assets/116710033/a15f0de2-32ba-4f61-84ce-bdbaa9a63d88
+
+Verification du fonctionnement du système sur le plan  Z :
+
+https://github.com/ESN2024/roche_lab3/assets/116710033/4e213f81-11a2-4b57-8630-6f05d2b760df
 
 ## Conclusion
 
