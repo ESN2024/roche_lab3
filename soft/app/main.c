@@ -10,7 +10,7 @@
 #include "opencores_i2c.h"
 #include <stdint.h>
 
-volatile __int16_t X, Y, Z;
+volatile __uint16_t X, Y, Z;
 volatile __uint8_t X0,X1,Y0,Y1,Z0,Z1,m,u,d,c,negatif,bouton;
 
 __uint8_t I2C_READ_ADXL345(__uint8_t reg) { // Lis un registre
@@ -50,9 +50,9 @@ void I2C_READ_BURSTMODE_ADXL345(__uint8_t *X0, __uint8_t *X1, __uint8_t *Y0, __u
     *Z1 = I2C_READ_ADXL345(0x37);
 }
 
-__int16_t complement_2(__int16_t number, __uint8_t *negatif){ //Calcul le complement a 2 si le nombre est negatif et mets a 1 le pointeur negatif
+__uint16_t complement_2(__uint16_t number, __uint8_t *negatif){ //Calcul le complement a 2 si le nombre est negatif et mets a 1 le pointeur negatif
     if (number & 0x8000) {
-        number = -(0xFFFF) - number + 1;
+        number = ~number + 1;
         *negatif = 1;
     } else {
         *negatif = 0; //controle le signe
@@ -60,7 +60,7 @@ __int16_t complement_2(__int16_t number, __uint8_t *negatif){ //Calcul le comple
     return number;
 }
 
-void display_segment(__int16_t X, __uint8_t *negatif) { // affiche sur 5 digits le nombre (1 digit pour le signe et 4 pour le nombre)
+void display_segment(__uint16_t X, __uint8_t *negatif) { // affiche sur 5 digits le nombre (1 digit pour le signe et 4 pour le nombre)
 
     __uint8_t m,u,d,c;
 
@@ -135,22 +135,22 @@ int main() {
     __uint8_t OFSX, OFSY, OFSZ; 
     I2C_init(OPENCORES_I2C_0_BASE,ALT_CPU_CPU_FREQ,400000); // 
 
-    // Plan Z
     I2C_WRITE_ADXL345(0x1E, 0x0);
     I2C_WRITE_ADXL345(0x1F, 0x05);
-    I2C_WRITE_ADXL345(0x20, 0xCD);
+    I2C_WRITE_ADXL345(0x20, -760);
 
     // I2C_WRITE_ADXL345(0x1E, 2048);
     // I2C_WRITE_ADXL345(0x1F, 0x05);
     // I2C_WRITE_ADXL345(0x20, 1794);
 
-    I2C_WRITE_ADXL345(0x31, 0x7); //full range
+    I2C_WRITE_ADXL345(0x31, 0x08); //full range
+    
 
-    OFSX = I2C_READ_ADXL345(0x1E);
+    OFSX = I2C_READ_ADXL345(0x31);
     OFSY = I2C_READ_ADXL345(0x1F);
     OFSZ = I2C_READ_ADXL345(0x20);
 
-    // alt_printf("OFS : %x   %x   %x\n", OFSX, OFSY, OFSZ);
+    alt_printf("OFS : %x   %x   %x\n", OFSX, OFSY, OFSZ);
 
 
     // Enregistrer les interruptions
